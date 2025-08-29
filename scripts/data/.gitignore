@@ -1,0 +1,45 @@
+# Data processing outputs
+outputs/
+neuropal_as_tiff/
+*.tiff
+*.tif
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Log files
+*.log
+*.out
+*.err
+
+# Environment files
+.env
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large data files
+*.h5
+*.hdf5
+*.npy
+*.npz
+
+# Model files (too large for git)
+*.pth
+*.pt
+*.pkl
+*.pickle

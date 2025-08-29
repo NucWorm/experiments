@@ -1,0 +1,67 @@
+# NucWorm Benchmark Repository .gitignore
+
+# Large data files
+*.h5
+*.hdf5
+*.tiff
+*.tif
+*.npy
+*.npz
+
+# Model files (too large for git)
+*.pth
+*.pt
+*.pkl
+*.pickle
+
+# Processing outputs
+outputs/
+neuropal_as_tiff/
+nnunet_heatmaps/
+center_point/
+evaluation_results/
+
+# Log files
+*.log
+*.out
+*.err
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+.venv/
+venv/
+env/
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Conda environments
+.conda/
+
+# Slurm job files
+slurm-*.out

@@ -1,0 +1,10 @@
+name: h5_conversion
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - h5py
+  - tifffile
+  - numpy
+  - pip
