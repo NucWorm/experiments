@@ -73,8 +73,8 @@ def process_heatmap_file(heatmap_path, output_folder, gt_folder,min_distance=5, 
         exclude_border=False  # Set to False if peaks near the border should be detected
     )
 
-    # transopose coordinates from (z, y, x) to (x, y, z)
-    coords = coords[:, [1, 2, 0]] 
+    # transpose coordinates from (z, y, x) to (x, y, z)
+    coords = coords[:, [2, 1, 0]] 
 
     # Sort the coordinates by z, y, and x
     coords = coords[np.lexsort((coords[:, 2], coords[:, 1], coords[:, 0]))]   
