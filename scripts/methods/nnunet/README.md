@@ -34,18 +34,14 @@ sbatch scripts/run_full_pipeline.slurm
 
 ### **Option 2: Run Individual Steps**
 ```bash
-# Step 1: Data conversion (H5 → TIFF)
-cd /projects/weilab/gohaina/nucworm/scripts/data/vol_conversion
-sbatch run_h5_to_tiff_conversion.slurm
-
-# Step 2: nnUNet inference (generates heatmaps)
+# Step 1: nnUNet inference (generates heatmaps)
 cd /projects/weilab/gohaina/nucworm/scripts/methods/nnunet
 sbatch scripts/run_inference.slurm
 
-# Step 3: Centroid extraction (generates CSVs)
+# Step 2: Centroid extraction (generates CSVs)
 sbatch scripts/run_postprocess.slurm
 
-# Step 4: Evaluation (optional)
+# Step 3: Evaluation (optional)
 sbatch scripts/run_evaluation.slurm
 ```
 
@@ -53,7 +49,7 @@ sbatch scripts/run_evaluation.slurm
 
 ### **Architecture**
 - **Model**: 3D nnUNet for nuclei detection
-- **Input**: 3D TIFF volumes (converted from H5)
+- **Input**: 3D TIFF volumes
 - **Output**: Heatmaps → Centroids (CSV files)
 - **Patch Size**: 32×96×64 voxels
 - **Stride**: 16×48×32 for sliding window inference

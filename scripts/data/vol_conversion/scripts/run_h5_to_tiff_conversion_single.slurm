@@ -1,11 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=h5_to_tiff_conversion_single
-#SBATCH --partition=short
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=128G
-#SBATCH --time=12:00:00
+#SBATCH --mem=64G
+#SBATCH --time=2:00:00
 #SBATCH --output=/projects/weilab/gohaina/logs/h5_to_tiff_conversion_single_%j.out
 #SBATCH --error=/projects/weilab/gohaina/logs/h5_to_tiff_conversion_single_%j.err
 #SBATCH --mail-type=ALL
@@ -13,7 +12,7 @@
 
 # H5 to TIFF Conversion Single Job Script
 # This script converts all neuropal H5 volumes to TIFF stacks in a single job
-
+o
 set -e
 
 echo "=== Starting H5 to TIFF Conversion (All Datasets) ==="

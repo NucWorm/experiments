@@ -36,23 +36,18 @@ sbatch scripts/run_full_pipeline.slurm
 
 This will:
 - Submit 5 parallel array jobs (indices 0-4)
-- **Only array task 0** runs H5 to TIFF conversion (prevents duplication)
-- **Other array tasks** wait for TIFF files to be available
 - Each job processes one fold using its corresponding model
 - All jobs run simultaneously (no staggering)
 - Each fold generates its own complete output structure
+- **Note**: TIFF files must be available before running this pipeline
 
 ### **Run Individual Steps**
 ```bash
-# Step 1: H5 to TIFF conversion (if needed)
-cd /projects/weilab/gohaina/nucworm/scripts/data/vol_conversion
-sbatch scripts/run_h5_to_tiff_conversion.slurm
-
-# Step 2: nnUNet inference for all folds
+# Step 1: nnUNet inference for all folds
 cd /projects/weilab/gohaina/nucworm/scripts/methods/nnunet
 sbatch scripts/run_inference.slurm
 
-# Step 3: Centroid extraction for all folds
+# Step 2: Centroid extraction for all folds
 sbatch scripts/run_postprocess.slurm
 ```
 
@@ -81,15 +76,14 @@ The scripts accept these parameters via environment variables:
 ## 📊 **Data Flow**
 
 ```
-H5 Files → TIFF Conversion → nnUNet Inference → Centroid Extraction
-    ↓              ↓                ↓                    ↓
-neuropal/    /scratch/gohaina/   outputs/nnunet/    outputs/nnunet/
-             neuropal_as_tiff/   fold_X/heatmaps/   fold_X/center_point/
+TIFF Files → nnUNet Inference → Centroid Extraction
+    ↓              ↓                    ↓
+neuropal_as_tiff/  outputs/nnunet/    outputs/nnunet/
+                   fold_X/heatmaps/   fold_X/center_point/
 ```
 
 ### **Data Locations**
-- **Input**: Neuropal H5 files
-- **Intermediate**: TIFF files in `/scratch/gohaina/neuropal_as_tiff/`
+- **Input**: TIFF files in `/projects/weilab/gohaina/nucworm/outputs/data/neuropal_as_tiff/`
 - **Final Outputs**: Organized by method and fold in `/outputs/nnunet/`
 
 ## 📊 **Expected Results**
