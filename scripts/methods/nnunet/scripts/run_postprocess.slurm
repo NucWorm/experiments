@@ -5,18 +5,28 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --time=04:00:00
-#SBATCH --output=/projects/weilab/gohaina/logs/centroid_extraction_%j.out
-#SBATCH --error=/projects/weilab/gohaina/logs/centroid_extraction_%j.err
+#SBATCH --output=/projects/weilab/gohaina/logs/nnunet_%A_%a_postprocess_%j.out
+#SBATCH --error=/projects/weilab/gohaina/logs/nnunet_%A_%a_postprocess_%j.err
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=gohaina@bc.edu
 
 # Centroid Extraction Slurm Script
 # This script extracts centroids from nnUNet heatmaps and saves them as CSVs
+# Accepts fold parameters via environment variables
 
 set -e
 
-echo "=== Starting Centroid Extraction ==="
+# Set default values if not provided
+FOLD_ID=${FOLD_ID:-0}
+FOLD_NAME=${FOLD_NAME:-"fold_0"}
+OUTPUT_BASE=${OUTPUT_BASE:-"/projects/weilab/gohaina/nucworm/outputs"}
+METHOD_NAME=${METHOD_NAME:-"nnunet"}
+
+echo "=== Starting Centroid Extraction for ${FOLD_NAME} ==="
 echo "Job ID: $SLURM_JOB_ID"
+echo "Fold: ${FOLD_NAME}"
+echo "Output Base: ${OUTPUT_BASE}"
+echo "Method: ${METHOD_NAME}"
 echo "Node: $SLURM_NODELIST"
 echo "Current directory: $(pwd)"
 echo "Current time: $(date)"
@@ -53,7 +63,9 @@ fi
 
 # Create output directories
 echo "Creating output directories..."
-mkdir -p /projects/weilab/gohaina/nucworm/outputs/center_point/{nejatbakhsh20,yemini21,wen20}
+mkdir -p "${OUTPUT_BASE}/${METHOD_NAME}/${FOLD_NAME}/center_point/nejatbakhsh20"
+mkdir -p "${OUTPUT_BASE}/${METHOD_NAME}/${FOLD_NAME}/center_point/yemini21"
+mkdir -p "${OUTPUT_BASE}/${METHOD_NAME}/${FOLD_NAME}/center_point/wen20"
 
 # Define datasets to process
 datasets=("nejatbakhsh20" "yemini21" "wen20")
@@ -63,8 +75,8 @@ for dataset in "${datasets[@]}"; do
     echo ""
     echo "=== Processing dataset: ${dataset} ==="
     
-    heatmap_dir="/projects/weilab/gohaina/nnunet_heatmaps/${dataset}"
-    output_dir="/projects/weilab/gohaina/nucworm/outputs/center_point/${dataset}"
+    heatmap_dir="${OUTPUT_BASE}/${METHOD_NAME}/${FOLD_NAME}/nnunet_heatmaps/${dataset}"
+    output_dir="${OUTPUT_BASE}/${METHOD_NAME}/${FOLD_NAME}/center_point/${dataset}"
     
     # Check if heatmap directory exists and has files
     if [ ! -d "$heatmap_dir" ]; then
@@ -94,8 +106,8 @@ for dataset in "${datasets[@]}"; do
 done
 
 echo ""
-echo "=== Centroid Extraction Complete ==="
-echo "All centroids saved to: /projects/weilab/gohaina/nucworm/outputs/center_point/"
+echo "=== Centroid Extraction Complete for ${FOLD_NAME} ==="
+echo "All centroids saved to: ${OUTPUT_BASE}/${METHOD_NAME}/${FOLD_NAME}/center_point/"
 echo "Current time: $(date)"
 echo ""
 echo "Pipeline complete! Final outputs are CSV files with centroid coordinates."

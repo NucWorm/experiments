@@ -58,9 +58,9 @@ if [ ! -f "src/convert_h5_to_tiff.py" ]; then
     exit 1
 fi
 
-# Create output directory for current dataset
+# Create output directory for current dataset in scratch space
 echo "Creating output directory for ${current_dataset}..."
-mkdir -p "/projects/weilab/gohaina/nucworm/outputs/data/neuropal_as_tiff/${current_dataset}"
+mkdir -p "/scratch/gohaina/neuropal_as_tiff/${current_dataset}"
 
 # First, do a dry run to see what will be converted
 echo "Performing dry run for ${current_dataset}..."
@@ -69,9 +69,9 @@ python src/convert_h5_to_tiff.py --dry_run --dataset ${current_dataset}
 echo ""
 echo "Starting actual conversion for ${current_dataset}..."
 python src/convert_h5_to_tiff.py \
-    --output_dir "/projects/weilab/gohaina/nucworm/outputs/data/neuropal_as_tiff" \
+    --output_dir "/scratch/gohaina/neuropal_as_tiff" \
     --dataset ${current_dataset}
 
 echo "=== Conversion Complete for ${current_dataset} ==="
-echo "TIFF files saved to: /projects/weilab/gohaina/nucworm/outputs/data/neuropal_as_tiff/${current_dataset}/"
+echo "TIFF files saved to: /scratch/gohaina/neuropal_as_tiff/${current_dataset}/"
 echo "Current time: $(date)"

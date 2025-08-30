@@ -13,7 +13,7 @@ data/
     ├── environment.yml
     ├── src/              # Core conversion scripts
     ├── scripts/          # Slurm execution scripts
-    └── docs/             # Documentation
+    └── docs/             # Documentations
 ```
 
 ## 🔧 **Available Utilities**
@@ -68,3 +68,5 @@ When adding new data processing utilities:
 3. Update this README
 4. Add appropriate `.gitignore` rules
 5. Test thoroughly before integration
+
+
