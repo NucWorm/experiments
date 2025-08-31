@@ -1,11 +1,11 @@
 # NucWorm Benchmark Results
 
-## Neuron Detection (d_{th} = 3 μm)
+## Neuron Detection (d<sub>th</sub> = 3 μm)
 
 ### nnUNet Performance
 
 | Dataset | F1 | Precision | Recall |
-|---------|----|-----------|---------| 
+|---------|----|-----------|---------|
 | **NEJATBAKHSH20** | **0.856±0.041** | **0.939±0.052** | **0.788±0.053** |
 | **WEN20** | **0.783±0.032** | **0.855±0.058** | **0.726±0.041** |
 | **YEMINI21** | **0.884±0.019** | **0.947±0.037** | **0.830±0.019** |
