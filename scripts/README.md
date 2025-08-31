@@ -14,6 +14,9 @@ scripts/
 │   └── vol_conversion/   # H5 to TIFF conversion
 └── utils/                 # Shared utilities
     ├── evaluation/       # Common evaluation tools
+    │   ├── evaluate_centroids.py    # Comprehensive centroid evaluation
+    │   ├── quick_evaluate.py        # Quick evaluation wrapper
+    │   └── README.md               # Evaluation documentation
     └── visualization/    # Visualization utilities
 ```
 
@@ -99,8 +102,44 @@ method_name/
 - **F1 Score**: Harmonic mean of precision and recall
 - **Distance Metrics**: Average distance to nearest ground truth
 
-### **Evaluation Scripts**
-Each method provides evaluation scripts that compute standardized metrics for fair comparison.
+### **Evaluation Tools**
+The benchmark provides comprehensive evaluation tools in `utils/evaluation/`:
+
+#### **Main Evaluation Script**
+```bash
+# Basic evaluation
+python utils/evaluation/evaluate_centroids.py --gt_dir ground_truth --pred_dir predictions --threshold 15
+
+# Anisotropic thresholds
+python utils/evaluation/evaluate_centroids.py --gt_dir ground_truth --pred_dir predictions \
+    --threshold_xy 15 --threshold_z 2
+
+# Cross-validation evaluation
+python utils/evaluation/evaluate_centroids.py --gt_dir ground_truth --pred_dir predictions \
+    --folds fold_0 fold_1 fold_2 --threshold 15
+```
+
+#### **Quick Evaluation Wrapper**
+```bash
+# Standard NucWorm evaluation (anisotropic thresholds)
+python utils/evaluation/quick_evaluate.py standard --gt_dir ground_truth --pred_dir predictions
+
+# Isotropic evaluation
+python utils/evaluation/quick_evaluate.py isotropic --gt_dir ground_truth --pred_dir predictions
+
+# Cross-validation evaluation
+python utils/evaluation/quick_evaluate.py cv --gt_dir ground_truth --pred_dir predictions
+```
+
+#### **Features**
+- **Flexible Thresholds**: Isotropic and anisotropic distance thresholds
+- **Multiple Formats**: Support for NPY and CSV prediction files
+- **Cross-Validation**: Evaluate across multiple folds
+- **Dataset-Specific**: Different thresholds for different datasets
+- **Multiple Outputs**: CSV, JSON, and human-readable summaries
+
+### **Method-Specific Evaluation**
+Each method also provides its own evaluation scripts for method-specific metrics and workflows.
 
 ## 🔍 **Monitoring**
 
