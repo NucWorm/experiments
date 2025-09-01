@@ -1,0 +1,51 @@
+# Cellpose3 configuration for NucWorm benchmark
+experiment:
+  name: "NucWorm_Cellpose3"
+  save_dir: "./experiments/cellpose3"
+
+# Device configuration
+device: "cuda"  # Use "cuda" for GPU or "cpu" for CPU
+
+# Data directories
+data:
+  input_dir: "/projects/weilab/gohaina/nucworm/outputs/data/neuropal_as_tiff"
+  output_dir: "/projects/weilab/gohaina/nucworm/outputs/cellpose3"
+
+# Data format
+data_format:
+  input_shape: "(C=3, Z, Y, X)"  # Actual input format: C=channels, Z=depth, Y=height, X=width
+  target_shape: "(Z, C, Y, X)"  # Target format after transpose: Z=depth, C=channels, Y=height, X=width
+  channels: 3  # Number of channels in the data (RGB)
+  convert_to_grayscale: true  # Convert RGB to grayscale for Cellpose3
+  rgb_weights: [0.299, 0.587, 0.114]  # RGB to grayscale conversion weights
+  channel_mapping: "RGB"  # Channel mapping: 0=red, 1=green, 2=blue
+
+# Cellpose3 model configuration
+model:
+  model_type: "cyto3"  # or "nuclei" - using cyto3 for general cell segmentation
+  gpu: true
+  # Using standard Cellpose model (no denoising)
+
+# Segmentation parameters
+segmentation:
+  diameter: 30  # Expected cell diameter in pixels (adjust based on your data)
+  flow_threshold: 0.4  # Flow error threshold
+  cellprob_threshold: 0.0  # Cell probability threshold
+  min_size: 15  # Minimum cell size in pixels
+  stitch_threshold: 0.0  # Stitching threshold for 3D volumes
+
+# Processing parameters
+processing:
+  do_3D: true  # Enable 3D segmentation (2.5D approach)
+  anisotropy: 2.0  # Z-axis anisotropy (Z sampling is coarser than XY)
+  normalize: false  # Use nnUNet-style preprocessing (clipping + z-score)
+  rescale: [1.0, 1.0, 1.0]  # Rescaling factors [Z, Y, X]
+
+# Output configuration
+output:
+  save_masks: true  # Save instance segmentation masks
+  save_flows: false  # Save flow predictions
+  save_outlines: false  # Save cell outlines
+  save_ncolor: false  # Save n-color image
+  save_txt: false  # Save text files with coordinates
+  save_csv: true  # Save CSV files with centroids
