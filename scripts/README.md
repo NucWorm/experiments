@@ -9,6 +9,7 @@ scripts/
 ├── README.md              # This file
 ├── methods/               # Individual method implementations
 │   ├── nnunet/           # nnUNet-based method
+│   ├── cellpose3/        # Cellpose3-based method
 │   └── [future_methods]/ # Additional methods
 ├── data/                  # Shared data processing utilities
 │   └── vol_conversion/   # H5 to TIFF conversion
@@ -27,6 +28,12 @@ scripts/
 - **Description**: 3D nnUNet for nuclei detection and centroid extraction
 - **Status**: ✅ Ready for use
 - **Quick Start**: `cd methods/nnunet && sbatch scripts/run_full_pipeline.slurm`
+
+### **Cellpose3 Method**
+- **Location**: `methods/cellpose3/`
+- **Description**: Cellpose3 for 3D neuron segmentation and centroid extraction
+- **Status**: ✅ Ready for use
+- **Quick Start**: `cd methods/cellpose3 && sbatch scripts/run_full_pipeline.slurm`
 
 ## 🚀 **Getting Started**
 
