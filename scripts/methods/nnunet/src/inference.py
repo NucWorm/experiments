@@ -8,8 +8,75 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import tqdm
+import tempfile
+import shutil
+import subprocess
 
 from nnunetv2.utilities.get_network_from_plans import get_network_from_plans
+
+#############################################
+# Centroid Extraction Function
+#############################################
+def run_centroid_extraction(heatmap_path, output_dir, gt_folder=None):
+    """
+    Run centroid extraction on a heatmap file.
+    
+    Args:
+        heatmap_path (str): Path to heatmap TIFF file
+        output_dir (str): Output directory for centroids
+        gt_folder (str): Optional ground truth folder for evaluation
+    
+    Returns:
+        str: Path to output centroids file
+    """
+    # Create output directory
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Get base name for output
+    base_name = os.path.splitext(os.path.basename(heatmap_path))[0]
+    centroids_output = os.path.join(output_dir, f"{base_name}_points.npy")
+    
+    # The postprocessing script expects input_folder and output_folder
+    # We need to create a temporary folder with just this heatmap file
+    temp_input_dir = tempfile.mkdtemp()
+    temp_heatmap_path = os.path.join(temp_input_dir, os.path.basename(heatmap_path))
+    shutil.copy2(heatmap_path, temp_heatmap_path)
+    
+    # Build postprocessing command
+    cmd = [
+        "python", "src/postprocess.py",
+        "--input_folder", temp_input_dir,
+        "--output_folder", output_dir,
+        "--min_distance", "5",
+        "--threshold_abs", "0.1"
+    ]
+    
+    if gt_folder:
+        cmd.extend(["--gt_folder", gt_folder])
+    
+    print(f"Running centroid extraction: {' '.join(cmd)}")
+    
+    # Run postprocessing
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print(f"Centroid extraction completed successfully")
+        print(f"STDOUT: {result.stdout}")
+        if result.stderr:
+            print(f"STDERR: {result.stderr}")
+        
+        # Clean up temporary directory
+        shutil.rmtree(temp_input_dir)
+        
+        return centroids_output
+    except subprocess.CalledProcessError as e:
+        print(f"Centroid extraction failed with error: {e}")
+        print(f"STDOUT: {e.stdout}")
+        print(f"STDERR: {e.stderr}")
+        
+        # Clean up temporary directory
+        shutil.rmtree(temp_input_dir)
+        
+        return None
 
 #############################################
 # Sliding-window Inference Function
@@ -295,6 +362,12 @@ def main(args):
             img = np.expand_dims(img, axis=0)
             print(f"Image shape after adding channel: {img.shape}")
         
+        # Handle channel duplication if requested
+        if args.duplicate_channels and img.shape[0] == 1:
+            print(f"Duplicating single channel to {args.input_channels} channels")
+            img = np.repeat(img, args.input_channels, axis=0)
+            print(f"Image shape after channel duplication: {img.shape}")
+        
         # Convert image to float32.
         print(f"Converting to float32...")
         img = img.astype(np.float32)
@@ -379,6 +452,21 @@ def main(args):
             print(f"File verification: {out_path} exists, size: {file_size} bytes")
         else:
             print(f"ERROR: File was not created: {out_path}")
+            continue
+        
+        # Run centroid extraction if requested
+        if args.extract_centroids:
+            print(f"Running centroid extraction on: {os.path.basename(out_path)}")
+            centroids_dir = os.path.join(args.output_dir, "centroids")
+            centroids_path = run_centroid_extraction(
+                out_path,
+                centroids_dir,
+                args.gt_folder
+            )
+            if centroids_path:
+                print(f"Centroids saved to: {centroids_path}")
+            else:
+                print(f"Centroid extraction failed for: {os.path.basename(out_path)}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="3D TIF Prediction with UNet3DSmall")
@@ -394,5 +482,13 @@ if __name__ == '__main__':
                         help="Stride (D,H,W) for sliding window inference (default: 48,48,96).")
     parser.add_argument("--device", type=str, default="cuda",
                         help="Device to use for inference ('cuda' or 'cpu').")
+    parser.add_argument("--input_channels", type=int, default=3,
+                        help="Number of input channels for the model.")
+    parser.add_argument("--duplicate_channels", action="store_true",
+                        help="Duplicate single channel data to match model input channels.")
+    parser.add_argument("--extract_centroids", action="store_true",
+                        help="Extract centroids from heatmaps using postprocessing.")
+    parser.add_argument("--gt_folder", type=str, default=None,
+                        help="Ground truth folder for evaluation (optional).")
     args = parser.parse_args()
     main(args)

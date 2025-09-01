@@ -146,9 +146,9 @@ if __name__ == "__main__":
     parser.add_argument("--output_folder", type=str, required=True,
                         help="Path to the folder where the output .npy files will be saved.")
     parser.add_argument("-gt", "--gt_folder", type=str, default=None,)
-    parser.add_argument("--min_distance", type=int, default=4,
+    parser.add_argument("--min_distance", type=int, default=5,
                         help="Minimum pixel distance between detected peaks (default: 5).")
-    parser.add_argument("--threshold_abs", type=float, default=0.2,
+    parser.add_argument("--threshold_abs", type=float, default=0.1,
                         help="Absolute threshold for peak detection (default: 0.1).")
     args = parser.parse_args()
     
