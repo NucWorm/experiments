@@ -1,0 +1,58 @@
+# Cellpose-SAM configuration for NucWorm benchmark
+experiment:
+  name: "NucWorm_Cellpose_SAM"
+  save_dir: "./experiments/cellpose_sam"
+
+# Device configuration
+device: "cuda"  # Use "cuda" for GPU or "cpu" for CPU
+
+# Data directories
+data:
+  input_dir: "/projects/weilab/gohaina/nucworm/outputs/data/neuropal_as_tiff"
+  output_dir: "/projects/weilab/gohaina/nucworm/outputs/cellpose_sam/flow_0.1"
+
+# Data format - Cellpose-SAM specific
+data_format:
+  input_shape: "(C=3, Z, Y, X)"  # Actual input format: C=channels, Z=depth, Y=height, X=width
+  target_shape: "(Z, C, Y, X)"  # Target format after transpose: Z=depth, C=channels, Y=height, X=width
+  channels: 3  # Number of channels in the data (RGB)
+  use_rgb_directly: true  # NEW: Use RGB channels directly (Cellpose-SAM is channel invariant)
+  convert_to_grayscale: false  # NEW: Don't convert to grayscale
+  rgb_weights: [0.299, 0.587, 0.114]  # RGB to grayscale conversion weights (fallback)
+  channel_mapping: "RGB"  # Channel mapping: 0=red, 1=green, 2=blue
+
+# Cellpose-SAM model configuration
+model:
+  model_type: "cellpose_sam"  # NEW: Cellpose-SAM model type
+  gpu: true
+  channel_invariant: true  # NEW: Leverage channel invariance
+  # SAM backbone parameters
+  input_size: 256  # Cellpose-SAM uses 256x256 input (vs SAM's 1024x1024)
+  patch_size: 8    # Cellpose-SAM uses 8x8 patches (vs SAM's 16x16)
+
+# Segmentation parameters (same as Cellpose3 for consistency)
+segmentation:
+  diameter: 30  # Expected cell diameter in pixels (dataset-specific)
+  flow_threshold: 0.1  # Flow error threshold
+  cellprob_threshold: 0.0  # Cell probability threshold
+  min_size: 15  # Minimum cell size in pixels
+  stitch_threshold: 0.0  # Stitching threshold for 3D volumes
+
+# Processing parameters
+processing:
+  do_3D: true  # Enable 3D segmentation (2.5D approach)
+  anisotropy: 2.0  # Z-axis anisotropy (dataset-specific)
+  normalize: false  # Use nnUNet-style preprocessing (clipping + z-score)
+  rescale: [1.0, 1.0, 1.0]  # Rescaling factors [Z, Y, X]
+  # Cellpose-SAM specific parameters
+  flow3D_smooth: 0.0  # 3D flow smoothing (default: no smoothing)
+  diameter_invariant: true  # Cellpose-SAM is diameter invariant
+
+# Output configuration
+output:
+  save_masks: true  # Save instance segmentation masks
+  save_flows: false  # Save flow predictions
+  save_outlines: false  # Save cell outlines
+  save_ncolor: false  # Save n-color image
+  save_txt: false  # Save text files with coordinates
+  save_csv: true  # Save CSV files with centroids

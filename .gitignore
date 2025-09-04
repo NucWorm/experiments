@@ -16,6 +16,7 @@
 
 # Processing outputs
 outputs/
+slurm/.run_logs/
 neuropal_as_tiff/
 nnunet_heatmaps/
 center_point/

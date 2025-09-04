@@ -72,7 +72,7 @@ except Exception as e:
 "
 
 # Define flow thresholds to test
-FLOW_THRESHOLDS=(0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8)
+FLOW_THRESHOLDS=(0.35 0.3 0.2 0.25 0.1 0.15)
 
 # Base output directory
 BASE_OUTPUT_DIR="/projects/weilab/gohaina/nucworm/outputs/cellpose_sam"

@@ -1,4 +1,21 @@
-# NucWorm Benchmark Results
+# NucWorm Benchmark
+
+This repository contains scripts and results for the NucWorm benchmark. See `scripts/` for method pipelines and `utils/` for evaluation tools.
+
+## Repository structure
+
+```
+docs/                      Documentation and notes
+outputs/                   Large outputs (ignored by git)
+scripts/                   Pipelines for methods and data utilities
+slurm/                     Submission wrappers to orchestrate jobs
+```
+
+Quickly submit center extraction arrays for supported methods:
+
+```bash
+bash slurm/submit_center_extraction.sh --methods cellpose_sam,cellpose3
+```
 
 ## Neuron Detection (d<sub>th</sub> = 3 μm)
 

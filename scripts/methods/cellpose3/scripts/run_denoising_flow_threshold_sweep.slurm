@@ -4,8 +4,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=200G
-#SBATCH --time=3-00:00:00
+#SBATCH --mem=100G
+#SBATCH --time=2-00:00:00
 #SBATCH --gres=gpu:1
 #SBATCH --output=/projects/weilab/gohaina/logs/cellpose3_denoising_flow_sweep_%j.out
 #SBATCH --error=/projects/weilab/gohaina/logs/cellpose3_denoising_flow_sweep_%j.err
@@ -54,7 +54,7 @@ print('✅ GPU available:', core.use_gpu())
 "
 
 # Define flow threshold values to test
-FLOW_THRESHOLDS=(0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8)
+FLOW_THRESHOLDS=(0.35 0.3 0.25 0.2 0.15 0.1)
 
 # Base output directory
 BASE_OUTPUT_DIR="/projects/weilab/gohaina/nucworm/outputs/cellpose3_denoising"
